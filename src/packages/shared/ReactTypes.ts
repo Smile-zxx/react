@@ -11,3 +11,6 @@ export interface ReactElement {
     type: ElementType;
     props: Props;
 }
+
+// 更新单元类型
+export type Action<State> = State | ((preState: State) => State)
