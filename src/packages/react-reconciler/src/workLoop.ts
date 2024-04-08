@@ -1,15 +1,17 @@
 import { beginWork } from "./beginWork";
 import { completeWork } from "./completeWork";
-import { FiberNode } from "./fiber";
+import { FiberNode, FiberRootNode, createWorkInprogress } from "./fiber";
+import { HostRoot } from "./workTag";
 
 let workingProgress: FiberNode | null = null
 
 
 
-function prepareFreshStack(fiber: FiberNode) {
-    workingProgress = fiber
+function prepareFreshStack(root: FiberRootNode) {
+    workingProgress = createWorkInprogress(root.current, {})
+
 }
-function renderRoot(root: FiberNode) {
+function renderRoot(root: FiberRootNode ) {
     // 初始化
     prepareFreshStack(root)
 
@@ -56,4 +58,31 @@ function completeUnitOfwork(fiber: FiberNode) {
         node = node?.return
         workingProgress = node
     } while (node !== null)
+}
+
+
+export function scheduleUpdateOnFiber(fiber: FiberNode) {
+    // 调度
+    const root = markUpdateFromFiberToRoot(fiber)
+    renderRoot(root)
+}
+
+function markUpdateFromFiberToRoot(fiber: FiberNode) {
+    let node = fiber
+    let parent = node.return
+    // 从 fiber 树找到 最上面的节点
+
+    while (parent !== null) {
+        node = parent
+        parent = node.return
+    }
+
+    if (node.tag === HostRoot) {
+        //  fiber 树的根节点 就是 hostRootfiber stateNode对应的就是 fiberRootNode
+        return node.stateNode
+    }
+
+    return null
+
+
 }
