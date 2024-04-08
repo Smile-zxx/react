@@ -11,7 +11,7 @@ function prepareFreshStack(root: FiberRootNode) {
     workingProgress = createWorkInprogress(root.current, {})
 
 }
-function renderRoot(root: FiberRootNode ) {
+function renderRoot(root: FiberRootNode) {
     // 初始化
     prepareFreshStack(root)
 
@@ -23,6 +23,12 @@ function renderRoot(root: FiberRootNode ) {
             console.log(err, "workloop err")
         }
     } while (true)
+
+    const finishedWork = root.current.alternate
+
+    root.finishedWork = finishedWork
+
+    commitRoot(root)
 }
 
 function workLoop() {

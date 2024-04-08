@@ -1,7 +1,7 @@
 import { type } from "os";
-import { Key, Props, Ref } from "../../shared/ReactTypes";
+import { Key, Props, ReactElementType, Ref } from "../../shared/ReactTypes";
 import { Flags, NoFlags } from "./fiberFlags";
-import { WorkTag } from "./workTag";
+import { FunctionComponent, HostComponent, WorkTag } from "./workTag";
 import { Container } from "./hostConfig";
 
 export class FiberNode {
@@ -21,6 +21,7 @@ export class FiberNode {
 
     alternate: FiberNode | null
     flags: Flags
+    subTreeFlags: Flags
 
     updateQueue: unknown
     memorizedState: any
@@ -45,6 +46,7 @@ export class FiberNode {
         this.alternate = null // workingProgress 和 current 互相指向
         // 副作用
         this.flags = NoFlags
+        this.subTreeFlags = NoFlags
 
         //更新队列
         this.updateQueue = null
@@ -87,4 +89,21 @@ export function createWorkInprogress(current: FiberNode, penddingProps: Props): 
     wip.memorizedProps = current.memorizedProps
     return wip
 
+}
+
+export function createFiberFromElement(element: ReactElementType) {
+    const { type, key, props } = element
+
+    let fiberTag: WorkTag = FunctionComponent
+
+    if (typeof type === 'string') {
+        fiberTag = HostComponent
+    } else if (typeof type !== 'function') {
+        console.log('未定义的type类型')
+    }
+
+    const fiber = new FiberNode(fiberTag, props, key)
+
+    fiber.type = type
+    return fiber
 }
