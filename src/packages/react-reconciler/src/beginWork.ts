@@ -5,6 +5,7 @@ import { UpdateQueue, processUpdateQueue } from "./updateQueue";
 import { HostComponent, HostRoot, HostText } from "./workTag";
 
 export const beginWork = (wip: FiberNode) => {
+    console.log(wip,'wip')
     switch (wip.tag) {
         case HostRoot:
             return updateHostRoot(wip)
@@ -19,6 +20,7 @@ export const beginWork = (wip: FiberNode) => {
             break
 
     }
+    return null
     // 比较 reactElement 和 fiberNode 返回 子 fiberNode
 }
 

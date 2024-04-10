@@ -1,4 +1,12 @@
 import React from "./packages/react"
-let a = <div> 123123</div>
+import ReactDOM from "./packages/react-dom"
+let a: any = <div>
+    <span>hello world</span>
+</div>
 console.log(a)
-console.log("123123")
+// console.log("123123")
+const root = document.querySelector("#root")
+console.log(root)
+const r = ReactDOM.createRoot(root!)
+console.log(r)
+r.render(a)
