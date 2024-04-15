@@ -5,7 +5,7 @@ import { UpdateQueue, processUpdateQueue } from "./updateQueue";
 import { HostComponent, HostRoot, HostText } from "./workTag";
 
 export const beginWork = (wip: FiberNode) => {
-    console.log(wip,'wip')
+    console.log('beginWork',wip,wip.tag)
     switch (wip.tag) {
         case HostRoot:
             return updateHostRoot(wip)

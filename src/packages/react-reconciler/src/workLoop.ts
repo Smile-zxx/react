@@ -1,4 +1,5 @@
 import { beginWork } from "./beginWork";
+import { commitMutationEffects } from "./commitWork";
 import { completeWork } from "./completeWork";
 import { FiberNode, FiberRootNode, createWorkInprogress } from "./fiber";
 import { MutationMask, NoFlags } from "./fiberFlags";
@@ -14,6 +15,8 @@ function prepareFreshStack(root: FiberRootNode) {
 }
 function renderRoot(root: FiberRootNode) {
     // 初始化
+
+    console.log('renderRoot')
     prepareFreshStack(root)
     console.log("workLoop......")
     do {
@@ -50,9 +53,14 @@ function commitRoot(root: FiberRootNode) {
     if (subtreeHasEffect || rootHasEffect) {
         // before mutation
         // mutation
+        commitMutationEffects(finishedWork);
+        // Fiber Tree切换
+        root.current = finishedWork;
         // layout
 
     } else {
+        // Fiber Tree切换
+        root.current = finishedWork;
 
     }
 
@@ -66,8 +74,10 @@ function workLoop() {
 
 function performUnitOfWork(fiber: FiberNode) {
     // next 为 fiber 的子节点
-    const next = beginWork(fiber)
 
+    console.log("performUnitOfWork")
+    const next = beginWork(fiber)
+    console.log("performUnitOfWork next", next)
     fiber.memorizedProps = fiber.penddingProps
 
     if (next === null) {
@@ -82,7 +92,12 @@ function performUnitOfWork(fiber: FiberNode) {
 function completeUnitOfwork(fiber: FiberNode) {
     let node: FiberNode | null = fiber
     do {
-        completeWork(node)
+        const next = completeWork(node)
+
+        if (next !== null) {
+            workingProgress = next;
+            return;
+        }
         const sibling = node.sibling
         if (sibling !== null) {
             workingProgress = sibling
@@ -97,6 +112,7 @@ function completeUnitOfwork(fiber: FiberNode) {
 export function scheduleUpdateOnFiber(fiber: FiberNode) {
     // 调度
     const root = markUpdateFromFiberToRoot(fiber)
+    console.log("scheduleUpdateOnFiber,root=", root)
     renderRoot(root)
 }
 

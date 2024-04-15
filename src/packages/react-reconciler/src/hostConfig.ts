@@ -7,6 +7,7 @@ export const createInstance = (type: string, props: any) => {
 }
 
 export const appendInitialChild = (parent: Instance | Container, child: Instance) => {
+    console.log('parent', parent)
     parent.appendChild(child)
 }
 

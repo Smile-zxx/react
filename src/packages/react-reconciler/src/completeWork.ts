@@ -35,6 +35,7 @@ export const completeWork = (wip: FiberNode) => {
             bubbleProperties(wip)
             return null
     }
+    return null
 
 }
 

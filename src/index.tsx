@@ -1,8 +1,6 @@
 import React from "./packages/react"
 import ReactDOM from "./packages/react-dom"
-let a: any = <div>
-    <span>hello world</span>
-</div>
+let a: any = <div><span>span</span></div>
 console.log(a)
 // console.log("123123")
 const root = document.querySelector("#root")

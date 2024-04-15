@@ -15,11 +15,12 @@ export function createContainer(container: Container) {
 }
 
 export function updateContainer(element: ReactElementType, root: FiberRootNode) {
+    console.log("updateContainer")
     const hostRootFiber = root.current
     const update = createUpdate(element)
     enqueueUpdate(hostRootFiber.updateQueue as UpdateQueue<ReactElementType>, update)
 
     scheduleUpdateOnFiber(hostRootFiber)
-    
+
     return element
 }
